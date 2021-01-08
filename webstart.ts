@@ -6,8 +6,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   runButton.addEventListener("click", async () => {
     const program = userCode.value;
     const wat = compile(program);
-    const result = await run(wat);
+    const code = document.getElementById("generated-code");
+    code.textContent = wat;
     const output = document.getElementById("output");
-    output.textContent = String(result);
+    try {
+      const result = await run(wat);
+      output.textContent = String(result);
+      output.setAttribute("style", "color: black");
+    }
+    catch(e) {
+      output.textContent = String(e);
+      output.setAttribute("style", "color: red");
+    }
   });
 });

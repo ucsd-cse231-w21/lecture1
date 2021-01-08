@@ -8,18 +8,24 @@ export function parseProgram(source : string) : Array<Stmt> {
 }
 
 export function traverseStmts(s : string, t : TreeCursor) {
+  // The top node in the program is a Script node with a list of children
+  // that are various statements
   t.firstChild();
   const stmts = [];
   do {
     stmts.push(traverseStmt(s, t));
-  } while(t.nextSibling());
+  } while(t.nextSibling()); // t.nextSibling() returns false when it reaches
+                            //  the end of the list of children
   return stmts;
 }
 
+/*
+  Invariant – t must focus on the same node at the end of the traversal
+*/
 export function traverseStmt(s : string, t : TreeCursor) : Stmt {
   switch(t.type.name) {
     case "AssignStatement":
-      t.firstChild(); // focused on name
+      t.firstChild(); // focused on name (the first child)
       let name = s.substring(t.from, t.to);
       t.nextSibling(); // focused on = sign. May need this for complex tasks, like +=!
       t.nextSibling(); // focused on the value expression
@@ -28,7 +34,8 @@ export function traverseStmt(s : string, t : TreeCursor) : Stmt {
       t.parent();
       return { tag: "assign", name, value };
     case "ExpressionStatement":
-      t.firstChild();
+      t.firstChild(); // The child is some kind of expression, the
+                      // ExpressionStatement is just a wrapper with no information
       let expr = traverseExpr(s, t);
       t.parent();
       return { tag: "expr", expr: expr };
