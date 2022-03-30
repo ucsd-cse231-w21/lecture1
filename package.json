@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build-web": "webpack && cp index.html build/",
-    "build-cli-repl": "tsc node-repl.ts --esModuleInterop --moduleResolution node --outDir cli/"
+    "build-cli-repl": "tsc node-main.ts --esModuleInterop --moduleResolution node --outDir cli/"
   },
   "author": "",
   "license": "ISC",
